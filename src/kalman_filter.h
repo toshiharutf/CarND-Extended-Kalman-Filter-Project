@@ -2,6 +2,8 @@
 #define KALMAN_FILTER_H_
 #include "Eigen/Dense"
 
+#define PI 3.141516
+
 class KalmanFilter {
 public:
 
