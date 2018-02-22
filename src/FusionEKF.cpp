@@ -12,8 +12,7 @@ using std::vector;
 /*
  * Constructor.
  */
-FusionEKF::FusionEKF() {
-  is_initialized_ = false;
+void FusionEKF::EKF_init(const MeasurementPackage &measurement_pack) {
 
   previous_timestamp_ = 0;
 
@@ -48,11 +47,50 @@ FusionEKF::FusionEKF() {
               0, 0.0009, 0,
               0, 0, 0.09;
 
-  /**
-  TODO:
-    * Finish initializing the FusionEKF.
-    * Set the process and measurement noises
-  */
+
+  cout << "EKF: " << endl;
+  ekf_.x_ = VectorXd(4);
+  //ekf_.x_ << 1, 1, 1, 1;
+
+  if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+    /**
+    Convert radar from polar to cartesian coordinates and initialize state.
+    */
+    // Radar measurements data structure : rho, theta, rhodot
+ float rho = measurement_pack.raw_measurements_[0]; // range
+ float phi = measurement_pack.raw_measurements_[1]; // bearing
+ float rho_dot = measurement_pack.raw_measurements_[2]; // rho rate's of change
+
+ // polar to cartesian transformation.
+ // TODO: is there a function in the Eigen library that can deal with the rotation?
+
+ float x = rho * cos(phi);
+ float y = rho * sin(phi);
+ float vx = rho_dot * cos(phi);
+ float vy = rho_dot * sin(phi);
+ ekf_.x_ << x, y, vx , vy;
+
+  }
+  else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+    /**
+    Remember that LIDAR only provides the position of an object, not its velocity
+    */
+    ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
+  }
+
+  // Initial covariance matrix
+    ekf_.P_ = MatrixXd(4, 4);
+    ekf_.P_ << 1, 0, 0, 0,
+			   0, 1, 0, 0,
+			   0, 0, 1000, 0,
+        0, 0, 0, 1000;
+
+    previous_timestamp_ = measurement_pack.timestamp_;
+
+  // done initializing, no need to predict or update
+
+  std::cout << "Kalman filter initialization successful" << '\n';
+  return;
 
 
 }
@@ -60,66 +98,9 @@ FusionEKF::FusionEKF() {
 /**
 * Destructor.
 */
-FusionEKF::~FusionEKF() {}
+//FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
-
-
-  /*****************************************************************************
-   *  Initialization
-   ****************************************************************************/
-  if (!is_initialized_) {
-    /**
-    TODO:
-      * Initialize the state ekf_.x_ with the first measurement.
-      * Create the covariance matrix.
-      * Remember: you'll need to convert radar from polar to cartesian coordinates.
-    */
-    // first measurement
-    cout << "EKF: " << endl;
-    ekf_.x_ = VectorXd(4);
-    //ekf_.x_ << 1, 1, 1, 1;
-
-    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      /**
-      Convert radar from polar to cartesian coordinates and initialize state.
-      */
-      // Radar measurements data structure : rho, theta, rhodot
-   float rho = measurement_pack.raw_measurements_[0]; // range
-   float phi = measurement_pack.raw_measurements_[1]; // bearing
-   float rho_dot = measurement_pack.raw_measurements_[2]; // rho rate's of change
-
-   // polar to cartesian transformation.
-   // TODO: is there a function in the Eigen library that can deal with the rotation?
-
-   float x = rho * cos(phi);
-   float y = rho * sin(phi);
-   float vx = rho_dot * cos(phi);
-   float vy = rho_dot * sin(phi);
-   ekf_.x_ << x, y, vx , vy;
-
-    }
-    else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-      /**
-      Remember that LIDAR only provides the position of an object, not its velocity
-      */
-      ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
-    }
-
-    // Initial covariance matrix
-      ekf_.P_ = MatrixXd(4, 4);
-      ekf_.P_ << 1, 0, 0, 0,
-  			   0, 1, 0, 0,
-  			   0, 0, 1000, 0,
-          0, 0, 0, 1000;
-
-      previous_timestamp_ = measurement_pack.timestamp_;
-
-    // done initializing, no need to predict or update
-    is_initialized_ = true;
-    std::cout << "Kalman filter initialization successful" << '\n';
-    return;
-  }
 
   /*****************************************************************************
    *  Prediction

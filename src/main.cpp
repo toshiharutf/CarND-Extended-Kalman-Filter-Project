@@ -32,18 +32,21 @@ int main()
 
   // Create a Kalman Filter instance
   FusionEKF fusionEKF;
+  MeasurementPackage meas_package;
+
+  fusionEKF.EKF_init(meas_package);
 
   // used to compute the RMSE later
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
 
-  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth,&meas_package](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
 
-    if (length && length > 2 && data[0] == '4' && data[1] == '2')
+  if (length && length > 2 && data[0] == '4' && data[1] == '2')
     {
 
       auto s = hasData(std::string(data));
@@ -58,7 +61,7 @@ int main()
 
           string sensor_measurment = j[1]["sensor_measurement"];
 
-          MeasurementPackage meas_package;
+
           istringstream iss(sensor_measurment);
     	  long long timestamp;
 

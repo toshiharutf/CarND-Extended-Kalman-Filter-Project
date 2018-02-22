@@ -14,12 +14,12 @@ public:
   /**
   * Constructor.
   */
-  FusionEKF();
+  void EKF_init(const MeasurementPackage &measurement_pack);
 
   /**
   * Destructor.
   */
-  virtual ~FusionEKF();
+  //virtual ~FusionEKF();
 
   /**
   * Run the whole flow of the Kalman Filter from here.
@@ -33,7 +33,7 @@ public:
 
 private:
   // check whether the tracking toolbox was initialized or not (first measurement)
-  bool is_initialized_;
+  //bool is_initialized_;
 
   // previous timestamp
   long long previous_timestamp_;

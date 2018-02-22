@@ -61,7 +61,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   if (c1 > 0.000001 && fabs(x_(0)) >0.000001) {
     hx(0) = c1;
     hx(1) = atan2( x_(1), x_(0) );
-    cout << hx(1) << '\n';
+  //  cout << hx(1) << '\n';
     hx(2) = (x_(2)*x_(0) + x_(3)*x_(1) )/c1;
   }
 
