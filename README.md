@@ -3,7 +3,7 @@
 
 In this project, an Extended Kalman Filter (EKF) for sensor fusion is implemented in C++. The starter code was forked from the udacity repository: https://github.com/udacity/CarND-Extended-Kalman-Filter-Project
 
-The algorithm written here is able to estimate of the position and speed of a vehicle from noisy sensor measurements. In this particular project, a LIDAR and Radar data are simulated. The data of both sensors is combined using sensor fusion, also implemented into the EKF algorithm. The algorithm was tested with the Udacity simulator, which can be found [here](https://github.com/udacity/self-driving-car-sim/releases). For running compiling and running the code, [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) is also necessary.
+The algorithm written here is able to estimate the position and speed of a vehicle from noisy sensor measurements. In this particular project, a LIDAR and Radar data are simulated. The data of both sensors is combined using sensor fusion, also implemented into the EKF algorithm. The algorithm was tested with the Udacity simulator, which can be found [here](https://github.com/udacity/self-driving-car-sim/releases). For running compiling and running the code, [uWebSocketIO](https://github.com/uWebSockets/uWebSockets) is also necessary.
 
 
 For running the code in Linux, you just  need the following instructions in the command  line:
