@@ -95,10 +95,6 @@ void FusionEKF::EKF_init(const MeasurementPackage &measurement_pack) {
 
 }
 
-/**
-* Destructor.
-*/
-//FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 

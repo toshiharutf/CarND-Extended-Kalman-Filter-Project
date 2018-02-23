@@ -11,19 +11,9 @@
 
 class FusionEKF {
 public:
-  /**
-  * Constructor.
-  */
   void EKF_init(const MeasurementPackage &measurement_pack);
-
-  /**
-  * Destructor.
-  */
-  //virtual ~FusionEKF();
-
-  /**
   * Run the whole flow of the Kalman Filter from here.
-  */
+  
   void ProcessMeasurement(const MeasurementPackage &measurement_pack);
 
   /**
